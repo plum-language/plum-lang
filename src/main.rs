@@ -1,5 +1,5 @@
-mod cli;
+mod lexer;
 
 fn main() {
-    println!("Oprem, svete!");
+
 }
