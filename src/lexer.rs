@@ -3,7 +3,7 @@ use logos::Logos;
 #[derive(Logos, Debug, PartialEq)]
 #[logos(skip r"[ \t\n\r\f]+")]
 #[logos(skip r"//.*")]
-enum Token {
+pub enum Token {
 
     #[regex("[абвгдђежзијклљмнњопрстћуфхцчџшАБВГДЂЕЖЗИЈКЛЉМНЊОПРСТЋУФХЦЧЏШ_][абвгдђежзијклљмнњопрстћуфхцчџшАБВГДЂЕЖЗИЈКЛЉМНЊОПРСТЋУФХЦЧЏШ0-9_-]*", plum_identifier, priority = 5)]
     #[regex("[a-zđžšćčA-ZĐŽŠŽĆ_][a-zđžšćčA-ZĐŽŠŽĆ0-9_]*", plum_identifier, priority = 3)]
@@ -186,7 +186,7 @@ mod tests {
         }
         "#;
 
-        let mut lex = Token::lexer(src);
+        let mut lex = Token::lexer(src).peekable();
 
         assert_eq!(lex.next(), Some(Ok(Token::Import)));
         assert_eq!(lex.next(), Some(Ok(Token::String("zadruga/sorte".to_string()))));

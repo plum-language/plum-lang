@@ -5,5 +5,5 @@ edition = "2021"
 authors = ["Srdjan Djordjevic <root@shellmonk.io>"]
 
 [dependencies]
-logos = "0.14.0"
+logos = "0.15.0"
 

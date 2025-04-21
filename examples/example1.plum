@@ -1,0 +1,25 @@
+uglobi "zadruga/sorte".
+
+sorta Doručak {
+    turi jaja = bunar.
+
+    (jaja) {
+        ja:jaja = jaja.
+    }
+
+    poso isprži komada {
+        ako (komada == 0 ili komada == bunar) {
+            bekni "Isprženo #{jaja} komada".
+        } inače {
+            bekni "Isprženo #{komada} komada".
+        }
+    }
+}
+
+poso gazda {
+    turi obrok = Doručak(5).
+    obrok:isprži(5).
+
+    vrni 0.
+}
+
