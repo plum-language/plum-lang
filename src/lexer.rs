@@ -4,9 +4,12 @@ use logos::Logos;
 #[logos(skip r"[ \t\n\r\f]+")]
 #[logos(skip r"//.*")]
 pub enum Token {
-
     #[regex("[абвгдђежзијклљмнњопрстћуфхцчџшАБВГДЂЕЖЗИЈКЛЉМНЊОПРСТЋУФХЦЧЏШ_][абвгдђежзијклљмнњопрстћуфхцчџшАБВГДЂЕЖЗИЈКЛЉМНЊОПРСТЋУФХЦЧЏШ0-9_-]*", plum_identifier, priority = 5)]
-    #[regex("[a-zđžšćčA-ZĐŽŠŽĆ_][a-zđžšćčA-ZĐŽŠŽĆ0-9_]*", plum_identifier, priority = 3)]
+    #[regex(
+        "[a-zđžšćčA-ZĐŽŠŽĆ_][a-zđžšćčA-ZĐŽŠŽĆ0-9_]*",
+        plum_identifier,
+        priority = 3
+    )]
     Identifier(String),
     #[regex(r#""[^"]*""#, plum_string, priority = 1)]
     String(String),
@@ -118,8 +121,6 @@ pub enum Token {
     #[token("gazda")]
     Main,
 
-
-
     #[token("dabome", |_| true)]
     #[token("jok", |_| false)]
     #[token("дабоме", |_| true)]
@@ -133,12 +134,26 @@ pub enum Token {
 
 fn plum_integer(lexer: &mut logos::Lexer<Token>) -> i64 {
     let slice = lexer.slice();
-    slice.parse::<i64>().expect(format!("Error parsing int {}:{}", lexer.span().start, lexer.span().end).as_str())
+    slice.parse::<i64>().expect(
+        format!(
+            "Error parsing int {}:{}",
+            lexer.span().start,
+            lexer.span().end
+        )
+        .as_str(),
+    )
 }
 
 fn plum_float(lexer: &mut logos::Lexer<Token>) -> f64 {
     let slice = lexer.slice();
-    slice.parse::<f64>().expect(format!("Error parsing float {}:{}", lexer.span().start, lexer.span().end).as_str())
+    slice.parse::<f64>().expect(
+        format!(
+            "Error parsing float {}:{}",
+            lexer.span().start,
+            lexer.span().end
+        )
+        .as_str(),
+    )
 }
 
 fn plum_string(lexer: &mut logos::Lexer<Token>) -> String {
@@ -151,11 +166,10 @@ fn plum_identifier(lexer: &mut logos::Lexer<Token>) -> String {
     slice.to_string()
 }
 
-
 #[cfg(test)]
 mod tests {
-    use logos::Logos;
     use crate::lexer::Token;
+    use logos::Logos;
 
     #[test]
     fn parser_test_lat() {
@@ -189,10 +203,16 @@ mod tests {
         let mut lex = Token::lexer(src).peekable();
 
         assert_eq!(lex.next(), Some(Ok(Token::Import)));
-        assert_eq!(lex.next(), Some(Ok(Token::String("zadruga/sorte".to_string()))));
+        assert_eq!(
+            lex.next(),
+            Some(Ok(Token::String("zadruga/sorte".to_string())))
+        );
         assert_eq!(lex.next(), Some(Ok(Token::Dot)));
         assert_eq!(lex.next(), Some(Ok(Token::Class)));
-        assert_eq!(lex.next(), Some(Ok(Token::Identifier("Doručak".to_string()))));
+        assert_eq!(
+            lex.next(),
+            Some(Ok(Token::Identifier("Doručak".to_string())))
+        );
         assert_eq!(lex.next(), Some(Ok(Token::LtBrace)));
         assert_eq!(lex.next(), Some(Ok(Token::Let)));
         assert_eq!(lex.next(), Some(Ok(Token::Identifier("jaja".to_string()))));
@@ -211,28 +231,46 @@ mod tests {
         assert_eq!(lex.next(), Some(Ok(Token::Dot)));
         assert_eq!(lex.next(), Some(Ok(Token::RtBrace)));
         assert_eq!(lex.next(), Some(Ok(Token::Function)));
-        assert_eq!(lex.next(), Some(Ok(Token::Identifier("isprži".to_string()))));
-        assert_eq!(lex.next(), Some(Ok(Token::Identifier("komada".to_string()))));
+        assert_eq!(
+            lex.next(),
+            Some(Ok(Token::Identifier("isprži".to_string())))
+        );
+        assert_eq!(
+            lex.next(),
+            Some(Ok(Token::Identifier("komada".to_string())))
+        );
         assert_eq!(lex.next(), Some(Ok(Token::LtBrace)));
         assert_eq!(lex.next(), Some(Ok(Token::If)));
         assert_eq!(lex.next(), Some(Ok(Token::LtParen)));
-        assert_eq!(lex.next(), Some(Ok(Token::Identifier("komada".to_string()))));
+        assert_eq!(
+            lex.next(),
+            Some(Ok(Token::Identifier("komada".to_string())))
+        );
         assert_eq!(lex.next(), Some(Ok(Token::Equals)));
         assert_eq!(lex.next(), Some(Ok(Token::Integer(0))));
         assert_eq!(lex.next(), Some(Ok(Token::Or)));
-        assert_eq!(lex.next(), Some(Ok(Token::Identifier("komada".to_string()))));
+        assert_eq!(
+            lex.next(),
+            Some(Ok(Token::Identifier("komada".to_string())))
+        );
         assert_eq!(lex.next(), Some(Ok(Token::Equals)));
         assert_eq!(lex.next(), Some(Ok(Token::Null)));
         assert_eq!(lex.next(), Some(Ok(Token::RtParen)));
         assert_eq!(lex.next(), Some(Ok(Token::LtBrace)));
         assert_eq!(lex.next(), Some(Ok(Token::Print)));
-        assert_eq!(lex.next(), Some(Ok(Token::String("Isprženo #{jaja} komada".to_string()))));
+        assert_eq!(
+            lex.next(),
+            Some(Ok(Token::String("Isprženo #{jaja} komada".to_string())))
+        );
         assert_eq!(lex.next(), Some(Ok(Token::Dot)));
         assert_eq!(lex.next(), Some(Ok(Token::RtBrace)));
         assert_eq!(lex.next(), Some(Ok(Token::Else)));
         assert_eq!(lex.next(), Some(Ok(Token::LtBrace)));
         assert_eq!(lex.next(), Some(Ok(Token::Print)));
-        assert_eq!(lex.next(), Some(Ok(Token::String("Isprženo #{komada} komada".to_string()))));
+        assert_eq!(
+            lex.next(),
+            Some(Ok(Token::String("Isprženo #{komada} komada".to_string())))
+        );
         assert_eq!(lex.next(), Some(Ok(Token::Dot)));
         assert_eq!(lex.next(), Some(Ok(Token::RtBrace)));
         assert_eq!(lex.next(), Some(Ok(Token::RtBrace)));
@@ -243,14 +281,20 @@ mod tests {
         assert_eq!(lex.next(), Some(Ok(Token::Let)));
         assert_eq!(lex.next(), Some(Ok(Token::Identifier("obrok".to_string()))));
         assert_eq!(lex.next(), Some(Ok(Token::Assignment)));
-        assert_eq!(lex.next(), Some(Ok(Token::Identifier("Doručak".to_string()))));
+        assert_eq!(
+            lex.next(),
+            Some(Ok(Token::Identifier("Doručak".to_string())))
+        );
         assert_eq!(lex.next(), Some(Ok(Token::LtParen)));
         assert_eq!(lex.next(), Some(Ok(Token::Integer(5))));
         assert_eq!(lex.next(), Some(Ok(Token::RtParen)));
         assert_eq!(lex.next(), Some(Ok(Token::Dot)));
         assert_eq!(lex.next(), Some(Ok(Token::Identifier("obrok".to_string()))));
         assert_eq!(lex.next(), Some(Ok(Token::ScopeResolution)));
-        assert_eq!(lex.next(), Some(Ok(Token::Identifier("isprži".to_string()))));
+        assert_eq!(
+            lex.next(),
+            Some(Ok(Token::Identifier("isprži".to_string())))
+        );
         assert_eq!(lex.next(), Some(Ok(Token::LtParen)));
         assert_eq!(lex.next(), Some(Ok(Token::Integer(5))));
         assert_eq!(lex.next(), Some(Ok(Token::RtParen)));
@@ -293,10 +337,16 @@ mod tests {
         let mut lex = Token::lexer(src);
 
         assert_eq!(lex.next(), Some(Ok(Token::Import)));
-        assert_eq!(lex.next(), Some(Ok(Token::String("zadruga/sorte".to_string()))));
+        assert_eq!(
+            lex.next(),
+            Some(Ok(Token::String("zadruga/sorte".to_string())))
+        );
         assert_eq!(lex.next(), Some(Ok(Token::Dot)));
         assert_eq!(lex.next(), Some(Ok(Token::Class)));
-        assert_eq!(lex.next(), Some(Ok(Token::Identifier("Доручак".to_string()))));
+        assert_eq!(
+            lex.next(),
+            Some(Ok(Token::Identifier("Доручак".to_string())))
+        );
         assert_eq!(lex.next(), Some(Ok(Token::LtBrace)));
         assert_eq!(lex.next(), Some(Ok(Token::Let)));
         assert_eq!(lex.next(), Some(Ok(Token::Identifier("јаја".to_string()))));
@@ -315,28 +365,46 @@ mod tests {
         assert_eq!(lex.next(), Some(Ok(Token::Dot)));
         assert_eq!(lex.next(), Some(Ok(Token::RtBrace)));
         assert_eq!(lex.next(), Some(Ok(Token::Function)));
-        assert_eq!(lex.next(), Some(Ok(Token::Identifier("испржи".to_string()))));
-        assert_eq!(lex.next(), Some(Ok(Token::Identifier("комада".to_string()))));
+        assert_eq!(
+            lex.next(),
+            Some(Ok(Token::Identifier("испржи".to_string())))
+        );
+        assert_eq!(
+            lex.next(),
+            Some(Ok(Token::Identifier("комада".to_string())))
+        );
         assert_eq!(lex.next(), Some(Ok(Token::LtBrace)));
         assert_eq!(lex.next(), Some(Ok(Token::If)));
         assert_eq!(lex.next(), Some(Ok(Token::LtParen)));
-        assert_eq!(lex.next(), Some(Ok(Token::Identifier("комада".to_string()))));
+        assert_eq!(
+            lex.next(),
+            Some(Ok(Token::Identifier("комада".to_string())))
+        );
         assert_eq!(lex.next(), Some(Ok(Token::Equals)));
         assert_eq!(lex.next(), Some(Ok(Token::Integer(0))));
         assert_eq!(lex.next(), Some(Ok(Token::Or)));
-        assert_eq!(lex.next(), Some(Ok(Token::Identifier("комада".to_string()))));
+        assert_eq!(
+            lex.next(),
+            Some(Ok(Token::Identifier("комада".to_string())))
+        );
         assert_eq!(lex.next(), Some(Ok(Token::Equals)));
         assert_eq!(lex.next(), Some(Ok(Token::Null)));
         assert_eq!(lex.next(), Some(Ok(Token::RtParen)));
         assert_eq!(lex.next(), Some(Ok(Token::LtBrace)));
         assert_eq!(lex.next(), Some(Ok(Token::Print)));
-        assert_eq!(lex.next(), Some(Ok(Token::String("Испржено #{јаја} комада".to_string()))));
+        assert_eq!(
+            lex.next(),
+            Some(Ok(Token::String("Испржено #{јаја} комада".to_string())))
+        );
         assert_eq!(lex.next(), Some(Ok(Token::Dot)));
         assert_eq!(lex.next(), Some(Ok(Token::RtBrace)));
         assert_eq!(lex.next(), Some(Ok(Token::Else)));
         assert_eq!(lex.next(), Some(Ok(Token::LtBrace)));
         assert_eq!(lex.next(), Some(Ok(Token::Print)));
-        assert_eq!(lex.next(), Some(Ok(Token::String("Испржено #{комада} комада".to_string()))));
+        assert_eq!(
+            lex.next(),
+            Some(Ok(Token::String("Испржено #{комада} комада".to_string())))
+        );
         assert_eq!(lex.next(), Some(Ok(Token::Dot)));
         assert_eq!(lex.next(), Some(Ok(Token::RtBrace)));
         assert_eq!(lex.next(), Some(Ok(Token::RtBrace)));
@@ -347,14 +415,20 @@ mod tests {
         assert_eq!(lex.next(), Some(Ok(Token::Let)));
         assert_eq!(lex.next(), Some(Ok(Token::Identifier("оброк".to_string()))));
         assert_eq!(lex.next(), Some(Ok(Token::Assignment)));
-        assert_eq!(lex.next(), Some(Ok(Token::Identifier("Доручак".to_string()))));
+        assert_eq!(
+            lex.next(),
+            Some(Ok(Token::Identifier("Доручак".to_string())))
+        );
         assert_eq!(lex.next(), Some(Ok(Token::LtParen)));
         assert_eq!(lex.next(), Some(Ok(Token::Integer(5))));
         assert_eq!(lex.next(), Some(Ok(Token::RtParen)));
         assert_eq!(lex.next(), Some(Ok(Token::Dot)));
         assert_eq!(lex.next(), Some(Ok(Token::Identifier("оброк".to_string()))));
         assert_eq!(lex.next(), Some(Ok(Token::ScopeResolution)));
-        assert_eq!(lex.next(), Some(Ok(Token::Identifier("испржи".to_string()))));
+        assert_eq!(
+            lex.next(),
+            Some(Ok(Token::Identifier("испржи".to_string())))
+        );
         assert_eq!(lex.next(), Some(Ok(Token::LtParen)));
         assert_eq!(lex.next(), Some(Ok(Token::Integer(5))));
         assert_eq!(lex.next(), Some(Ok(Token::RtParen)));
@@ -365,3 +439,4 @@ mod tests {
         assert_eq!(lex.next(), Some(Ok(Token::RtBrace)));
     }
 }
+
